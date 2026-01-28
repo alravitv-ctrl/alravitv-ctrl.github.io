@@ -1,51 +1,22 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>alravi.tv | Filmler & Diziler</title>
-<link rel="stylesheet" href="style.css">
-<script src="script.js"></script>
-</head>
-<body>
-
-<header>
-  <h1>alravi.tv</h1>
-  <p>Film & Dizi Rehberi</p>
-</header>
-
-<nav>
-  <a href="index.html">Ana Sayfa</a>
-  <a href="filmler.html">Filmler & Diziler</a>
-  <a href="maclar.html">Maçlar</a>
-</nav>
-
-<section>
-  <h2>Arama & Filtre</h2>
-  <input type="text" id="search" placeholder="Film, dizi veya platform ara..." onkeyup="filterContent()">
-  <button onclick="randomSuggestion()">Rastgele Öner</button>
-</section>
-
 <section>
   <h2>İçerikler</h2>
   <div class="cards">
+    <!-- Film/Dizi Kartları -->
     <div class="card" data-type="film" data-platform="netflix" data-genre="aksiyon">
-      <img src="https://image.tmdb.org/t/p/w300/abcd123.jpg" alt="Örnek Film 1">
-      <h3>Örnek Film 1</h3>
+      <img src="https://image.tmdb.org/t/p/w300/abcd123.jpg" alt="Film 1">
+      <h3>Film 1</h3>
       <p>Film • Netflix • Aksiyon</p>
     </div>
     <div class="card" data-type="dizi" data-platform="prime" data-genre="dram">
-      <img src="https://image.tmdb.org/t/p/w300/efgh456.jpg" alt="Örnek Dizi 1">
-      <h3>Örnek Dizi 1</h3>
+      <img src="https://image.tmdb.org/t/p/w300/efgh456.jpg" alt="Dizi 1">
+      <h3>Dizi 1</h3>
       <p>Dizi • Amazon Prime • Dram</p>
     </div>
-    <!-- Buraya 500+ içerik eklenebilir -->
+    <div class="card" data-type="film" data-platform="bluTV" data-genre="komedi">
+      <img src="https://image.tmdb.org/t/p/w300/ijkl789.jpg" alt="Film 2">
+      <h3>Film 2</h3>
+      <p>Film • BluTV • Komedi</p>
+    </div>
+    <!-- ... Burada toplam 50 içerik olacak şekilde çoğaltılabilir ... -->
   </div>
 </section>
-
-<footer>
-© 2026 alravi.tv
-</footer>
-
-</body>
-  </html>
