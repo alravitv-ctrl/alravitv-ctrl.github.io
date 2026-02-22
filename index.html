@@ -1,161 +1,565 @@
-<!DOCTYPE html>
-<html lang="tr">
+<!doctype html>
+<html lang="tr" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>alravi.tv | Ana Sayfa</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="alravi.tv — Yasal ve lisanslı IPTV/OTT yayın çözümleri. Çoklu cihaz desteği, stabil altyapı." />
+  <title>alravi.tv — IPTV / OTT Yayın</title>
 
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-E7GN317TNL"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-E7GN317TNL');
-</script>
+  <style>
+    :root{
+      --bg:#070a16;
+      --card:#0b1026;
+      --text:#eef2ff;
+      --muted:#b7c3ff;
+      --brand:#4da3ff;
+      --brand2:#7c5cff;
+      --ok:#41d1a6;
+      --warn:#ffcc66;
+      --border:rgba(255,255,255,.12);
+      --shadow: 0 22px 70px rgba(0,0,0,.42);
+      --radius: 18px;
+      --max: 1120px;
+    }
+    [data-theme="light"]{
+      --bg:#f6f7ff;
+      --card:#ffffff;
+      --text:#081022;
+      --muted:#3b4570;
+      --brand:#1f6bff;
+      --brand2:#7c5cff;
+      --ok:#0d9b78;
+      --warn:#b8860b;
+      --border:rgba(8,16,34,.12);
+      --shadow: 0 18px 55px rgba(8,16,34,.12);
+    }
 
-<!-- Google AdSense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3091526462811611"
-     crossorigin="anonymous"></script>
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1100px 700px at 10% 0%, rgba(124,92,255,.22), transparent 55%),
+        radial-gradient(900px 600px at 90% 10%, rgba(77,163,255,.18), transparent 55%),
+        radial-gradient(1000px 650px at 50% 100%, rgba(77,163,255,.10), transparent 60%),
+        var(--bg);
+      line-height:1.55;
+      overflow-x:hidden;
+    }
 
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: system-ui, sans-serif; background:#0f0f0f; color:#eaeaea; line-height:1.6; }
-  header { padding:50px 20px; text-align:center; background:linear-gradient(135deg,#1e1e1e,#000);}
-  header h1 { font-size:42px; margin-bottom:10px;}
-  header p { color:#aaa; font-size:18px;}
-  nav { display:flex; justify-content:center; gap:20px; background:#111; padding:15px; position:sticky; top:0;}
-  nav a { color:#fff; text-decoration:none; font-weight:600; }
-  nav a:hover { color:#4da3ff; }
-  section { max-width:1000px; margin:40px auto; padding:0 20px; }
-  section h2 { font-size:28px; margin-bottom:20px; border-left:4px solid #4da3ff; padding-left:12px; }
-  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; }
-  .card { background:#161616; padding:20px; border-radius:10px; transition:transform 0.2s ease, box-shadow 0.2s ease; }
-  .card:hover { transform:translateY(-5px); box-shadow:0 10px 30px rgba(0,0,0,0.5);}
-  .card img { width:100%; border-radius:5px; margin-bottom:10px; }
-  .card h3 { margin-bottom:10px; color:#4da3ff;}
-  footer { text-align:center; padding:30px 20px; color:#777; background:#0a0a0a; margin-top:40px; font-size:14px; }
+    a{color:inherit; text-decoration:none}
+    .container{max-width:var(--max); margin:0 auto; padding:0 20px}
 
-  /* Mobil uyumlu arama ve öneri butonu */
-  #arama, #rastgele { display:block; width:100%; padding:10px; margin:10px 0; border-radius:5px; border:none; }
-</style>
+    /* Topbar */
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,0));
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    [data-theme="light"] .topbar{
+      background: linear-gradient(to bottom, rgba(255,255,255,.70), rgba(255,255,255,0));
+      border-bottom:1px solid rgba(8,16,34,.08);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0; gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:900; letter-spacing:.2px;
+    }
+    .logo{
+      width:38px; height:38px; border-radius:12px;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      box-shadow: 0 12px 34px rgba(124,92,255,.22);
+      position:relative; overflow:hidden;
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset:-40%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.7), transparent 45%);
+      transform: rotate(18deg);
+      opacity:.45;
+    }
+    .brand small{display:block; font-weight:650; opacity:.85}
+
+    .menu{display:flex; align-items:center; gap:16px}
+    .menu a{
+      color:var(--muted);
+      font-weight:750;
+      padding:8px 10px;
+      border-radius:12px;
+      transition:.2s ease;
+    }
+    .menu a:hover{background:rgba(255,255,255,.07); color:var(--text)}
+    [data-theme="light"] .menu a:hover{background:rgba(8,16,34,.06)}
+
+    .actions{display:flex; align-items:center; gap:10px}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:10px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      font-weight:850;
+      cursor:pointer;
+      transition:.2s ease;
+      user-select:none;
+    }
+    [data-theme="light"] .btn{background: rgba(8,16,34,.03)}
+    .btn:hover{transform: translateY(-1px); box-shadow: 0 12px 30px rgba(0,0,0,.18)}
+    .btn.primary{
+      border:none;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      box-shadow: 0 14px 44px rgba(77,163,255,.22);
+    }
+    .btn.primary:hover{box-shadow: 0 18px 60px rgba(124,92,255,.25)}
+    .icon{width:18px; height:18px; display:inline-block}
+
+    .hamburger{
+      display:none;
+      width:42px; height:42px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      cursor:pointer;
+    }
+    [data-theme="light"] .hamburger{background: rgba(8,16,34,.03)}
+    .hamburger span{
+      display:block; width:18px; height:2px; margin:4px auto;
+      background:var(--text); border-radius:99px;
+    }
+
+    .mobile-panel{
+      display:none;
+      position:fixed;
+      inset: 68px 14px auto 14px;
+      border:1px solid var(--border);
+      border-radius: 20px;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      padding: 10px;
+      z-index: 70;
+    }
+    [data-theme="light"] .mobile-panel{background: rgba(255,255,255,.86)}
+    .mobile-panel a{
+      display:block;
+      padding:12px 12px;
+      border-radius: 14px;
+      font-weight:900;
+    }
+    .mobile-panel a:hover{background: rgba(255,255,255,.08)}
+    [data-theme="light"] .mobile-panel a:hover{background: rgba(8,16,34,.06)}
+    .mobile-panel.show{display:block}
+
+    /* Hero */
+    main{padding-bottom:20px}
+    .hero{padding:66px 0 26px}
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:22px;
+      align-items:stretch;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color:var(--muted);
+      font-weight:800;
+      width:fit-content;
+    }
+    [data-theme="light"] .badge{background: rgba(8,16,34,.03)}
+    .badge .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      box-shadow:0 0 0 4px rgba(77,163,255,.15);
+    }
+    h1{
+      font-size: clamp(34px, 4vw, 56px);
+      line-height:1.06;
+      letter-spacing:-.7px;
+      margin:14px 0 12px;
+    }
+    .lead{
+      color:var(--muted);
+      font-size: 16.5px;
+      max-width: 62ch;
+      margin:0;
+    }
+    .hero-cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:20px}
+
+    .chips{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.12);
+      color:var(--muted);
+      font-weight:850;
+      font-size: 12px;
+    }
+    [data-theme="light"] .chip{background: rgba(255,255,255,.7)}
+    .chip i{width:8px;height:8px;border-radius:99px;background:linear-gradient(135deg,var(--brand),var(--brand2)); display:inline-block}
+
+    .hero-card{
+      border:1px solid var(--border);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      padding:18px;
+      position:relative;
+      overflow:hidden;
+    }
+    [data-theme="light"] .hero-card{
+      background: linear-gradient(180deg, rgba(8,16,34,.04), rgba(8,16,34,.02));
+    }
+    .hero-card:before{
+      content:"";
+      position:absolute; inset:-40%;
+      background:
+        radial-gradient(circle at 25% 20%, rgba(124,92,255,.35), transparent 45%),
+        radial-gradient(circle at 70% 45%, rgba(77,163,255,.25), transparent 50%);
+      filter: blur(10px);
+      opacity:.85;
+    }
+    .hero-card > *{position:relative}
+    .mini-title{font-weight:950; letter-spacing:.2px; margin:0 0 10px}
+    .mini{display:grid; gap:12px}
+    .mini .row{
+      display:flex; gap:12px; align-items:flex-start;
+      padding:12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+    }
+    [data-theme="light"] .mini .row{background: rgba(255,255,255,.65)}
+    .pill{
+      width:42px; height:42px; border-radius:14px;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      flex:0 0 auto;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow: 0 16px 30px rgba(124,92,255,.22);
+    }
+    .mini .row b{display:block}
+    .mini .row p{margin:2px 0 0; color:var(--muted); font-weight:750; font-size:13px}
+
+    /* Sections */
+    section{padding:64px 0}
+    .section-head{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:18px; margin-bottom:22px;
+    }
+    .section-head h2{
+      margin:0;
+      font-size: clamp(22px, 2.5vw, 34px);
+      letter-spacing:-.4px;
+    }
+    .section-head p{
+      margin:0;
+      color:var(--muted);
+      max-width: 75ch;
+      font-weight:750;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+    }
+    .card{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 10px 40px rgba(0,0,0,.12);
+      padding:18px;
+      transition: .2s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    [data-theme="light"] .card{background: rgba(8,16,34,.03)}
+    .card:hover{transform: translateY(-2px)}
+    .tag{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.12);
+      color:var(--muted);
+      font-weight:900;
+      font-size: 12px;
+      width:fit-content;
+      margin-bottom:12px;
+    }
+    [data-theme="light"] .tag{background: rgba(255,255,255,.7)}
+    .tag .spark{width:8px;height:8px;border-radius:99px;background:linear-gradient(135deg,var(--brand),var(--brand2))}
+    .card h3{margin:0 0 8px}
+    .card p{margin:0; color:var(--muted); font-weight:750}
+
+    /* Pricing */
+    .pricing{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:14px;
+      align-items:stretch;
+    }
+    .price.highlight{
+      background: linear-gradient(180deg, rgba(124,92,255,.20), rgba(255,255,255,.05));
+      border-color: rgba(124,92,255,.35);
+    }
+    [data-theme="light"] .price.highlight{
+      background: linear-gradient(180deg, rgba(124,92,255,.14), rgba(8,16,34,.03));
+    }
+    .money{
+      font-size: 32px;
+      font-weight: 950;
+      letter-spacing: -1px;
+      margin: 6px 0 4px;
+    }
+    .sub{color:var(--muted); font-weight:900; font-size:13px}
+    .list{margin:14px 0 0; padding:0; list-style:none; display:grid; gap:9px}
+    .list li{display:flex; align-items:flex-start; gap:10px; color:var(--muted); font-weight:800}
+    .check{
+      width:18px; height:18px; border-radius:6px;
+      background: linear-gradient(135deg, var(--ok), var(--brand2));
+      flex:0 0 auto;
+      margin-top:2px;
+    }
+
+    /* FAQ */
+    .split{display:grid; grid-template-columns: 1fr 1fr; gap:14px; align-items:start}
+    details{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.05);
+      padding:14px 16px;
+    }
+    [data-theme="light"] details{background: rgba(8,16,34,.03)}
+    summary{cursor:pointer; font-weight:950}
+    details p{color:var(--muted); font-weight:750; margin:10px 0 0}
+
+    /* Footer */
+    footer{padding:34px 0 50px; color:var(--muted)}
+    .footer-grid{display:grid; grid-template-columns: 1.2fr .8fr; gap:14px; align-items:start}
+    .links{display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-end}
+    .links a{
+      padding:8px 10px; border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      font-weight:850;
+    }
+    [data-theme="light"] .links a{background: rgba(8,16,34,.03)}
+    .links a:hover{transform: translateY(-1px)}
+
+    /* Reveal */
+    .reveal{opacity:0; transform: translateY(12px); transition: .55s ease}
+    .reveal.show{opacity:1; transform: translateY(0)}
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-grid{grid-template-columns:1fr}
+      .grid-3{grid-template-columns:1fr 1fr}
+      .pricing{grid-template-columns:1fr 1fr}
+      .split{grid-template-columns:1fr}
+      .footer-grid{grid-template-columns:1fr}
+      .links{justify-content:flex-start}
+    }
+    @media (max-width: 640px){
+      .menu{display:none}
+      .hamburger{display:inline-grid; place-items:center}
+      .grid-3, .pricing{grid-template-columns:1fr}
+      .hero{padding-top:50px}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .reveal{transition:none}
+      .btn,.card{transition:none}
+    }
+  </style>
 </head>
+
 <body>
+  <header class="topbar">
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="#top" aria-label="Ana sayfa">
+          <span class="logo" aria-hidden="true"></span>
+          <span>
+            alravi.tv
+            <small>IPTV / OTT Yayın Hizmeti</small>
+          </span>
+        </a>
 
-<header>
-  <h1>alravi.tv</h1>
-  <p>Film & Dizi Rehberi • Futbol Maçları</p>
-</header>
+        <div class="menu" aria-label="Ana menü">
+          <a href="#ozellikler">Özellikler</a>
+          <a href="#cihazlar">Cihazlar</a>
+          <a href="#paketler">Paketler</a>
+          <a href="#sss">SSS</a>
+        </div>
 
-<nav>
-  <a href="#anasayfa">Ana Sayfa</a>
-  <a href="#filmler">Filmler & Diziler</a>
-  <a href="#maclar">Maçlar</a>
-</nav>
+        <div class="actions">
+          <button class="btn" id="themeBtn" type="button" title="Tema değiştir">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 19v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M4.22 4.22l1.42 1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M18.36 18.36l1.42 1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M3 12h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M19 12h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M4.22 19.78l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <span>Mod</span>
+          </button>
 
-<section id="anasayfa">
-  <h2>Tanıtım</h2>
-  <p>alravi.tv, dünyadaki popüler film, dizi ve futbol maçlarını takip edebileceğiniz bir rehber sitesidir. Arama ve rastgele öneri butonu ile istediğiniz içeriklere kolayca ulaşabilirsiniz.</p>
-</section>
+          <a class="btn primary" href="#paketler">
+            Paketleri Gör
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
 
-<section id="filmler">
-  <h2>Filmler & Diziler</h2>
-  <input type="text" id="arama" placeholder="Film/Dizi Ara...">
-  <button id="rastgele">Rastgele Öner</button>
-  <div class="cards" id="filmKartlar">
-    <!-- Örnek 10 film/dizi, 50’ye çoğaltılabilir -->
-    <div class="card" data-type="film" data-platform="netflix" data-genre="aksiyon">
-      <img src="https://image.tmdb.org/t/p/w300/abcd123.jpg" alt="Film 1">
-      <h3>Film 1</h3>
-      <p>Netflix • Aksiyon</p>
-    </div>
-    <div class="card" data-type="dizi" data-platform="prime" data-genre="dram">
-      <img src="https://image.tmdb.org/t/p/w300/efgh456.jpg" alt="Dizi 1">
-      <h3>Dizi 1</h3>
-      <p>Amazon Prime • Dram</p>
-    </div>
-    <div class="card" data-type="film" data-platform="bluTV" data-genre="komedi">
-      <img src="https://image.tmdb.org/t/p/w300/ijkl789.jpg" alt="Film 2">
-      <h3>Film 2</h3>
-      <p>BluTV • Komedi</p>
-    </div>
-    <div class="card" data-type="dizi" data-platform="disney" data-genre="aksiyon">
-      <img src="https://image.tmdb.org/t/p/w300/mnop012.jpg" alt="Dizi 2">
-      <h3>Dizi 2</h3>
-      <p>Disney+ • Aksiyon</p>
-    </div>
-    <div class="card" data-type="film" data-platform="netflix" data-genre="dram">
-      <img src="https://image.tmdb.org/t/p/w300/qrst345.jpg" alt="Film 3">
-      <h3>Film 3</h3>
-      <p>Netflix • Dram</p>
-    </div>
-    <div class="card" data-type="dizi" data-platform="prime" data-genre="komedi">
-      <img src="https://image.tmdb.org/t/p/w300/uvwx678.jpg" alt="Dizi 3">
-      <h3>Dizi 3</h3>
-      <p>Amazon Prime • Komedi</p>
-    </div>
-    <div class="card" data-type="film" data-platform="bluTV" data-genre="aksiyon">
-      <img src="https://image.tmdb.org/t/p/w300/yzab901.jpg" alt="Film 4">
-      <h3>Film 4</h3>
-      <p>BluTV • Aksiyon</p>
-    </div>
-    <div class="card" data-type="dizi" data-platform="disney" data-genre="dram">
-      <img src="https://image.tmdb.org/t/p/w300/cdef234.jpg" alt="Dizi 4">
-      <h3>Dizi 4</h3>
-      <p>Disney+ • Dram</p>
-    </div>
-    <div class="card" data-type="film" data-platform="netflix" data-genre="komedi">
-      <img src="https://image.tmdb.org/t/p/w300/fghi567.jpg" alt="Film 5">
-      <h3>Film 5</h3>
-      <p>Netflix • Komedi</p>
-    </div>
-    <div class="card" data-type="dizi" data-platform="prime" data-genre="aksiyon">
-      <img src="https://image.tmdb.org/t/p/w300/jklm890.jpg" alt="Dizi 5">
-      <h3>Dizi 5</h3>
-      <p>Amazon Prime • Aksiyon</p>
-    </div>
-  </div>
-</section>
+          <button class="hamburger" id="hamburger" type="button" aria-label="Menüyü aç/kapat">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </nav>
 
-<section id="maclar">
-  <h2>Futbol Maçları</h2>
-  <div class="cards">
-    <!-- Örnek 10 maç, 50’ye çoğaltılabilir -->
-    <div class="card"><h3>Galatasaray – Fenerbahçe</h3><p>Süper Lig</p><p>20:00 • beIN Sports 1</p></div>
-    <div class="card"><h3>Trabzonspor – Başakşehir</h3><p>Süper Lig</p><p>18:00 • beIN Sports 2</p></div>
-    <div class="card"><h3>Real Madrid – Barcelona</h3><p>La Liga</p><p>22:00 • beIN Sports 3</p></div>
-    <div class="card"><h3>Manchester United – Liverpool</h3><p>Premier Lig</p><p>21:00 • beIN Sports 4</p></div>
-    <div class="card"><h3>Bayern Münih – Borussia Dortmund</h3><p>Bundesliga</p><p>19:30 • DAZN</p></div>
-    <div class="card"><h3>Juventus – Milan</h3><p>Serie A</p><p>21:45 • DAZN</p></div>
-    <div class="card"><h3>PSG – Lyon</h3><p>Ligue 1</p><p>20:00 • beIN Sports 5</p></div>
-    <div class="card"><h3>Ajax – PSV</h3><p>Eredivisie</p><p>21:15 • Ziggo Sport</p></div>
-    <div class="card"><h3>Chelsea – Arsenal</h3><p>Premier Lig</p><p>21:00 • Sky Sports</p></div>
-    <div class="card"><h3>Barcelona – Atletico Madrid</h3><p>La Liga</p><p>22:00 • beIN Sports 3</p></div>
-  </div>
-</section>
+      <div class="mobile-panel" id="mobilePanel" aria-label="Mobil menü">
+        <a href="#ozellikler">Özellikler</a>
+        <a href="#cihazlar">Cihazlar</a>
+        <a href="#paketler">Paketler</a>
+        <a href="#sss">SSS</a>
+      </div>
+    </div>
+  </header>
 
-<footer>© 2026 alravi.tv</footer>
+  <main id="top">
+    <div class="container">
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <div class="badge reveal">
+              <span class="dot" aria-hidden="true"></span>
+              <span>Yasal içerik • Stabil altyapı • Çoklu cihaz</span>
+            </div>
 
-<script>
-// Rastgele öneri butonu
-document.getElementById('rastgele').addEventListener('click', function(){
-  const kartlar = document.querySelectorAll('#filmKartlar .card');
-  const rastgele = kartlar[Math.floor(Math.random() * kartlar.length)];
-  rastgele.scrollIntoView({behavior:'smooth', block:'center'});
-  rastgele.style.border = '2px solid #4da3ff';
-  setTimeout(()=>{ rastgele.style.border=''; },2000);
-});
+            <h1 class="reveal" style="transition-delay:.05s">
+              alravi.tv ile<br/>kaliteli IPTV / OTT deneyimi
+            </h1>
 
-// Arama fonksiyonu
-document.getElementById('arama').addEventListener('input', function(){
-  const query = this.value.toLowerCase();
-  const kartlar = document.querySelectorAll('#filmKartlar .card');
-  kartlar.forEach(k=>{
-    const text = k.textContent.toLowerCase();
-    k.style.display = text.includes(query)?'block':'none';
-  });
-});
-</script>
+            <p class="lead reveal" style="transition-delay:.1s">
+              Lisanslı içerik sağlayıcılarıyla uyumlu, kullanıcı dostu bir yayın deneyimi.
+              Kurulum hızlı, kullanım basit.
+            </p>
 
-</body>
-  </html>
+            <div class="hero-cta reveal" style="transition-delay:.14s">
+              <a class="btn primary" href="#paketler">Paketleri İncele</a>
+              <a class="btn" href="#ozellikler">Özellikler</a>
+            </div>
+
+            <div class="chips reveal" style="transition-delay:.18s">
+              <span class="chip"><i></i> Çoklu Cihaz</span>
+              <span class="chip"><i></i> Stabil Yayın</span>
+              <span class="chip"><i></i> Hızlı Kurulum</span>
+              <span class="chip"><i></i> Şeffaf Kullanım</span>
+            </div>
+          </div>
+
+          <aside class="hero-card reveal" style="transition-delay:.12s">
+            <p class="mini-title">Öne çıkanlar</p>
+            <div class="mini">
+              <div class="row">
+                <div class="pill" aria-hidden="true">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none">
+                    <path d="M7 8h10M7 12h10M7 16h6" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" stroke="white" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div>
+                  <b>Kategori düzeni</b>
+                  <p>Canlı TV, VOD gibi düzenli içerik yapısı.</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="pill" aria-hidden="true">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2l3 6 6 .9-4.5 4.4 1.1 6.2L12 16.9 6.4 19.5l1.1-6.2L3 8.9 9 8l3-6Z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <b>Kolay kullanım</b>
+                  <p>Arama, favoriler ve pratik arayüz.</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="pill" aria-hidden="true">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none">
+                    <path d="M4 12a8 8 0 0 1 16 0" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M12 12l5-3" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M5 20h14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <b>Stabil altyapı</b>
+                  <p>Akıcı izleme deneyimi için optimizasyon.</p>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </div>
+
+    <section id="ozellikler">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="reveal">Özellikler</h2>
+            <p class="reveal" style="transition-delay:.05s">
+              alravi.tv tanıtım sayfası — yasal/izinli yayın prensibiyle hazırlanmıştır.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="card reveal">
+            <div class="tag"><span class="spark"></span>Kalite</div>
+            <h3>HD / FHD (İçeriğe bağlı)</h3>
+            <p>Akış kalitesi, lisanslı kaynaklara göre sunulur.</p>
+          </div>
+
+          <div class="card reveal" style="transition-delay:.05s">
+            <div class="tag"><span class="spark"></span>Kolay</div>
+            <h3>Hızlı Kurulum</h3>
+            <p>Hesap → cihaz → izleme. Karmaşık adımlar yok.</p>
+          </div>
+
+          <div class="card reveal" style="transition-delay:.1s">
+            <div class="tag"><span class="spark"></span>Uyum</div>
+            <h3>Çoklu Cihaz</h3>
+            <p>Telefon, TV, tablet ve bilgisayarda uyumlu deneyim.</p>
+          </div>
+
+          <div class="card reveal">
+            <div class="tag"><span class="spark"></span>Deneyim</div>
+            <h3>Arama & Favoriler</h3>
+            <p>Hızlı arama, favoriler ve düzenli gezinme.</p>
+          </div>
+
+          <div class="card reveal" style="transition-delay:.05s">
+            <div class="tag"><span class="spark"></span>Güven</div>
+            <h3>Şeffaf Kullanım</h3>
+            <p>Kullanım koşulları ve gizlilik metinleriyle net yapı.</p>
+          </div>
+
+          <d
