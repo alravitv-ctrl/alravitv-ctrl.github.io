@@ -1,565 +1,211 @@
 <!doctype html>
-<html lang="tr" data-theme="dark">
+<html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="alravi.tv — Yasal ve lisanslı IPTV/OTT yayın çözümleri. Çoklu cihaz desteği, stabil altyapı." />
-  <title>alravi.tv — IPTV / OTT Yayın</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>alravi.tv</title>
 
-  <style>
-    :root{
-      --bg:#070a16;
-      --card:#0b1026;
-      --text:#eef2ff;
-      --muted:#b7c3ff;
-      --brand:#4da3ff;
-      --brand2:#7c5cff;
-      --ok:#41d1a6;
-      --warn:#ffcc66;
-      --border:rgba(255,255,255,.12);
-      --shadow: 0 22px 70px rgba(0,0,0,.42);
-      --radius: 18px;
-      --max: 1120px;
-    }
-    [data-theme="light"]{
-      --bg:#f6f7ff;
-      --card:#ffffff;
-      --text:#081022;
-      --muted:#3b4570;
-      --brand:#1f6bff;
-      --brand2:#7c5cff;
-      --ok:#0d9b78;
-      --warn:#b8860b;
-      --border:rgba(8,16,34,.12);
-      --shadow: 0 18px 55px rgba(8,16,34,.12);
-    }
+<script>document.documentElement.classList.add("js")</script>
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      color:var(--text);
-      background:
-        radial-gradient(1100px 700px at 10% 0%, rgba(124,92,255,.22), transparent 55%),
-        radial-gradient(900px 600px at 90% 10%, rgba(77,163,255,.18), transparent 55%),
-        radial-gradient(1000px 650px at 50% 100%, rgba(77,163,255,.10), transparent 60%),
-        var(--bg);
-      line-height:1.55;
-      overflow-x:hidden;
-    }
+<style>
+:root{
+--bg:#070a16;
+--text:#eef2ff;
+--muted:#b7c3ff;
+--brand:#4da3ff;
+--brand2:#7c5cff;
+--border:rgba(255,255,255,.12);
+--ok:#41d1a6;
+}
 
-    a{color:inherit; text-decoration:none}
-    .container{max-width:var(--max); margin:0 auto; padding:0 20px}
+body{
+margin:0;
+font-family:system-ui;
+background:
+radial-gradient(900px 500px at 10% 0%, rgba(124,92,255,.25), transparent),
+radial-gradient(800px 500px at 90% 10%, rgba(77,163,255,.2), transparent),
+var(--bg);
+color:var(--text);
+}
 
-    /* Topbar */
-    .topbar{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,0));
-      border-bottom:1px solid rgba(255,255,255,.06);
-    }
-    [data-theme="light"] .topbar{
-      background: linear-gradient(to bottom, rgba(255,255,255,.70), rgba(255,255,255,0));
-      border-bottom:1px solid rgba(8,16,34,.08);
-    }
-    .nav{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 0; gap:12px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      font-weight:900; letter-spacing:.2px;
-    }
-    .logo{
-      width:38px; height:38px; border-radius:12px;
-      background: linear-gradient(135deg, var(--brand), var(--brand2));
-      box-shadow: 0 12px 34px rgba(124,92,255,.22);
-      position:relative; overflow:hidden;
-    }
-    .logo:after{
-      content:"";
-      position:absolute; inset:-40%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.7), transparent 45%);
-      transform: rotate(18deg);
-      opacity:.45;
-    }
-    .brand small{display:block; font-weight:650; opacity:.85}
+.container{max-width:1100px;margin:auto;padding:20px}
 
-    .menu{display:flex; align-items:center; gap:16px}
-    .menu a{
-      color:var(--muted);
-      font-weight:750;
-      padding:8px 10px;
-      border-radius:12px;
-      transition:.2s ease;
-    }
-    .menu a:hover{background:rgba(255,255,255,.07); color:var(--text)}
-    [data-theme="light"] .menu a:hover{background:rgba(8,16,34,.06)}
+header{
+background:rgba(0,0,0,.4);
+backdrop-filter:blur(10px);
+position:sticky;
+top:0;
+}
 
-    .actions{display:flex; align-items:center; gap:10px}
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:10px;
-      padding:10px 14px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color:var(--text);
-      font-weight:850;
-      cursor:pointer;
-      transition:.2s ease;
-      user-select:none;
-    }
-    [data-theme="light"] .btn{background: rgba(8,16,34,.03)}
-    .btn:hover{transform: translateY(-1px); box-shadow: 0 12px 30px rgba(0,0,0,.18)}
-    .btn.primary{
-      border:none;
-      background: linear-gradient(135deg, var(--brand), var(--brand2));
-      box-shadow: 0 14px 44px rgba(77,163,255,.22);
-    }
-    .btn.primary:hover{box-shadow: 0 18px 60px rgba(124,92,255,.25)}
-    .icon{width:18px; height:18px; display:inline-block}
+.nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 0;
+}
 
-    .hamburger{
-      display:none;
-      width:42px; height:42px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      cursor:pointer;
-    }
-    [data-theme="light"] .hamburger{background: rgba(8,16,34,.03)}
-    .hamburger span{
-      display:block; width:18px; height:2px; margin:4px auto;
-      background:var(--text); border-radius:99px;
-    }
+.logo{
+width:40px;height:40px;border-radius:12px;
+background:linear-gradient(135deg,var(--brand),var(--brand2));
+}
 
-    .mobile-panel{
-      display:none;
-      position:fixed;
-      inset: 68px 14px auto 14px;
-      border:1px solid var(--border);
-      border-radius: 20px;
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow);
-      padding: 10px;
-      z-index: 70;
-    }
-    [data-theme="light"] .mobile-panel{background: rgba(255,255,255,.86)}
-    .mobile-panel a{
-      display:block;
-      padding:12px 12px;
-      border-radius: 14px;
-      font-weight:900;
-    }
-    .mobile-panel a:hover{background: rgba(255,255,255,.08)}
-    [data-theme="light"] .mobile-panel a:hover{background: rgba(8,16,34,.06)}
-    .mobile-panel.show{display:block}
+.brand{display:flex;gap:10px;align-items:center;font-weight:900}
 
-    /* Hero */
-    main{padding-bottom:20px}
-    .hero{padding:66px 0 26px}
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:22px;
-      align-items:stretch;
-    }
-    .badge{
-      display:inline-flex; align-items:center; gap:10px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color:var(--muted);
-      font-weight:800;
-      width:fit-content;
-    }
-    [data-theme="light"] .badge{background: rgba(8,16,34,.03)}
-    .badge .dot{
-      width:10px; height:10px; border-radius:999px;
-      background: linear-gradient(135deg, var(--brand), var(--brand2));
-      box-shadow:0 0 0 4px rgba(77,163,255,.15);
-    }
-    h1{
-      font-size: clamp(34px, 4vw, 56px);
-      line-height:1.06;
-      letter-spacing:-.7px;
-      margin:14px 0 12px;
-    }
-    .lead{
-      color:var(--muted);
-      font-size: 16.5px;
-      max-width: 62ch;
-      margin:0;
-    }
-    .hero-cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:20px}
+.menu a{
+color:var(--muted);
+margin-left:15px;
+font-weight:800;
+text-decoration:none;
+}
 
-    .chips{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
-    .chip{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.12);
-      color:var(--muted);
-      font-weight:850;
-      font-size: 12px;
-    }
-    [data-theme="light"] .chip{background: rgba(255,255,255,.7)}
-    .chip i{width:8px;height:8px;border-radius:99px;background:linear-gradient(135deg,var(--brand),var(--brand2)); display:inline-block}
+.menu a:hover{color:white}
 
-    .hero-card{
-      border:1px solid var(--border);
-      border-radius: 24px;
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      box-shadow: var(--shadow);
-      padding:18px;
-      position:relative;
-      overflow:hidden;
-    }
-    [data-theme="light"] .hero-card{
-      background: linear-gradient(180deg, rgba(8,16,34,.04), rgba(8,16,34,.02));
-    }
-    .hero-card:before{
-      content:"";
-      position:absolute; inset:-40%;
-      background:
-        radial-gradient(circle at 25% 20%, rgba(124,92,255,.35), transparent 45%),
-        radial-gradient(circle at 70% 45%, rgba(77,163,255,.25), transparent 50%);
-      filter: blur(10px);
-      opacity:.85;
-    }
-    .hero-card > *{position:relative}
-    .mini-title{font-weight:950; letter-spacing:.2px; margin:0 0 10px}
-    .mini{display:grid; gap:12px}
-    .mini .row{
-      display:flex; gap:12px; align-items:flex-start;
-      padding:12px;
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.12);
-    }
-    [data-theme="light"] .mini .row{background: rgba(255,255,255,.65)}
-    .pill{
-      width:42px; height:42px; border-radius:14px;
-      background: linear-gradient(135deg, var(--brand), var(--brand2));
-      flex:0 0 auto;
-      display:flex; align-items:center; justify-content:center;
-      box-shadow: 0 16px 30px rgba(124,92,255,.22);
-    }
-    .mini .row b{display:block}
-    .mini .row p{margin:2px 0 0; color:var(--muted); font-weight:750; font-size:13px}
+h1{
+font-size:42px;
+margin:30px 0 10px;
+}
 
-    /* Sections */
-    section{padding:64px 0}
-    .section-head{
-      display:flex; align-items:flex-end; justify-content:space-between;
-      gap:18px; margin-bottom:22px;
-    }
-    .section-head h2{
-      margin:0;
-      font-size: clamp(22px, 2.5vw, 34px);
-      letter-spacing:-.4px;
-    }
-    .section-head p{
-      margin:0;
-      color:var(--muted);
-      max-width: 75ch;
-      font-weight:750;
-    }
+p{color:var(--muted);font-weight:700}
 
-    .grid-3{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap:14px;
-    }
-    .card{
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.05);
-      box-shadow: 0 10px 40px rgba(0,0,0,.12);
-      padding:18px;
-      transition: .2s ease;
-      position:relative;
-      overflow:hidden;
-    }
-    [data-theme="light"] .card{background: rgba(8,16,34,.03)}
-    .card:hover{transform: translateY(-2px)}
-    .tag{
-      display:inline-flex; gap:8px; align-items:center;
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.12);
-      color:var(--muted);
-      font-weight:900;
-      font-size: 12px;
-      width:fit-content;
-      margin-bottom:12px;
-    }
-    [data-theme="light"] .tag{background: rgba(255,255,255,.7)}
-    .tag .spark{width:8px;height:8px;border-radius:99px;background:linear-gradient(135deg,var(--brand),var(--brand2))}
-    .card h3{margin:0 0 8px}
-    .card p{margin:0; color:var(--muted); font-weight:750}
+.pricing{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px;
+margin-top:30px;
+}
 
-    /* Pricing */
-    .pricing{
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap:14px;
-      align-items:stretch;
-    }
-    .price.highlight{
-      background: linear-gradient(180deg, rgba(124,92,255,.20), rgba(255,255,255,.05));
-      border-color: rgba(124,92,255,.35);
-    }
-    [data-theme="light"] .price.highlight{
-      background: linear-gradient(180deg, rgba(124,92,255,.14), rgba(8,16,34,.03));
-    }
-    .money{
-      font-size: 32px;
-      font-weight: 950;
-      letter-spacing: -1px;
-      margin: 6px 0 4px;
-    }
-    .sub{color:var(--muted); font-weight:900; font-size:13px}
-    .list{margin:14px 0 0; padding:0; list-style:none; display:grid; gap:9px}
-    .list li{display:flex; align-items:flex-start; gap:10px; color:var(--muted); font-weight:800}
-    .check{
-      width:18px; height:18px; border-radius:6px;
-      background: linear-gradient(135deg, var(--ok), var(--brand2));
-      flex:0 0 auto;
-      margin-top:2px;
-    }
+.card{
+border:1px solid var(--border);
+padding:20px;
+border-radius:18px;
+background:rgba(255,255,255,.05);
+}
 
-    /* FAQ */
-    .split{display:grid; grid-template-columns: 1fr 1fr; gap:14px; align-items:start}
-    details{
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.05);
-      padding:14px 16px;
-    }
-    [data-theme="light"] details{background: rgba(8,16,34,.03)}
-    summary{cursor:pointer; font-weight:950}
-    details p{color:var(--muted); font-weight:750; margin:10px 0 0}
+.tag{
+display:inline-flex;
+gap:6px;
+padding:6px 10px;
+border-radius:999px;
+border:1px solid var(--border);
+font-size:12px;
+margin-bottom:10px;
+color:var(--muted);
+font-weight:800;
+}
 
-    /* Footer */
-    footer{padding:34px 0 50px; color:var(--muted)}
-    .footer-grid{display:grid; grid-template-columns: 1.2fr .8fr; gap:14px; align-items:start}
-    .links{display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-end}
-    .links a{
-      padding:8px 10px; border-radius:12px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      font-weight:850;
-    }
-    [data-theme="light"] .links a{background: rgba(8,16,34,.03)}
-    .links a:hover{transform: translateY(-1px)}
+.money{
+font-size:30px;
+font-weight:900;
+margin:5px 0;
+}
 
-    /* Reveal */
-    .reveal{opacity:0; transform: translateY(12px); transition: .55s ease}
-    .reveal.show{opacity:1; transform: translateY(0)}
+.sub{color:var(--muted);font-weight:800}
 
-    /* Responsive */
-    @media (max-width: 980px){
-      .hero-grid{grid-template-columns:1fr}
-      .grid-3{grid-template-columns:1fr 1fr}
-      .pricing{grid-template-columns:1fr 1fr}
-      .split{grid-template-columns:1fr}
-      .footer-grid{grid-template-columns:1fr}
-      .links{justify-content:flex-start}
-    }
-    @media (max-width: 640px){
-      .menu{display:none}
-      .hamburger{display:inline-grid; place-items:center}
-      .grid-3, .pricing{grid-template-columns:1fr}
-      .hero{padding-top:50px}
-    }
-    @media (prefers-reduced-motion: reduce){
-      .reveal{transition:none}
-      .btn,.card{transition:none}
-    }
-  </style>
+ul{list-style:none;padding:0;margin:15px 0 0}
+li{margin:6px 0;color:var(--muted);font-weight:700}
+
+.check{
+display:inline-block;
+width:14px;height:14px;
+background:linear-gradient(135deg,var(--ok),var(--brand2));
+border-radius:4px;
+margin-right:6px;
+}
+
+/* reveal fix */
+.reveal{opacity:1;transform:none}
+.js .reveal{opacity:0;transform:translateY(20px);transition:.6s}
+.js .reveal.show{opacity:1;transform:none}
+
+@media(max-width:900px){
+.pricing{grid-template-columns:1fr 1fr}
+}
+@media(max-width:500px){
+.pricing{grid-template-columns:1fr}
+h1{font-size:32px}
+}
+</style>
 </head>
 
 <body>
-  <header class="topbar">
-    <div class="container">
-      <nav class="nav">
-        <a class="brand" href="#top" aria-label="Ana sayfa">
-          <span class="logo" aria-hidden="true"></span>
-          <span>
-            alravi.tv
-            <small>IPTV / OTT Yayın Hizmeti</small>
-          </span>
-        </a>
 
-        <div class="menu" aria-label="Ana menü">
-          <a href="#ozellikler">Özellikler</a>
-          <a href="#cihazlar">Cihazlar</a>
-          <a href="#paketler">Paketler</a>
-          <a href="#sss">SSS</a>
-        </div>
+<header>
+<div class="container nav">
+<div class="brand">
+<div class="logo"></div>
+<span>alravi.tv</span>
+</div>
+<div class="menu">
+<a href="#paketler">Paketler</a>
+</div>
+</div>
+</header>
 
-        <div class="actions">
-          <button class="btn" id="themeBtn" type="button" title="Tema değiştir">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 3v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M12 19v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M4.22 4.22l1.42 1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M18.36 18.36l1.42 1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M3 12h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M19 12h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M4.22 19.78l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            <span>Mod</span>
-          </button>
+<div class="container">
 
-          <a class="btn primary" href="#paketler">
-            Paketleri Gör
-            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M5 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
+<h1 class="reveal">IPTV Paketleri</h1>
+<p class="reveal">Size uygun planı seçin ve hemen izlemeye başlayın.</p>
 
-          <button class="hamburger" id="hamburger" type="button" aria-label="Menüyü aç/kapat">
-            <span></span><span></span><span></span>
-          </button>
-        </div>
-      </nav>
+<section id="paketler" class="pricing">
 
-      <div class="mobile-panel" id="mobilePanel" aria-label="Mobil menü">
-        <a href="#ozellikler">Özellikler</a>
-        <a href="#cihazlar">Cihazlar</a>
-        <a href="#paketler">Paketler</a>
-        <a href="#sss">SSS</a>
-      </div>
-    </div>
-  </header>
+<div class="card reveal">
+<div class="tag">Başlangıç</div>
+<div class="money">₺100</div>
+<div class="sub">1 Ay</div>
+<ul>
+<li><span class="check"></span>Standart erişim</li>
+<li><span class="check"></span>Temel destek</li>
+<li><span class="check"></span>Tek kullanıcı</li>
+</ul>
+</div>
 
-  <main id="top">
-    <div class="container">
-      <section class="hero">
-        <div class="hero-grid">
-          <div>
-            <div class="badge reveal">
-              <span class="dot" aria-hidden="true"></span>
-              <span>Yasal içerik • Stabil altyapı • Çoklu cihaz</span>
-            </div>
+<div class="card reveal">
+<div class="tag">Avantajlı</div>
+<div class="money">₺250</div>
+<div class="sub">3 Ay</div>
+<ul>
+<li><span class="check"></span>Daha uygun fiyat</li>
+<li><span class="check"></span>Öncelikli destek</li>
+<li><span class="check"></span>Tek kullanıcı</li>
+</ul>
+</div>
 
-            <h1 class="reveal" style="transition-delay:.05s">
-              alravi.tv ile<br/>kaliteli IPTV / OTT deneyimi
-            </h1>
+<div class="card reveal">
+<div class="tag">Popüler</div>
+<div class="money">₺550</div>
+<div class="sub">6 Ay</div>
+<ul>
+<li><span class="check"></span>Uzun kullanım</li>
+<li><span class="check"></span>Öncelikli destek</li>
+<li><span class="check"></span>Tek kullanıcı</li>
+</ul>
+</div>
 
-            <p class="lead reveal" style="transition-delay:.1s">
-              Lisanslı içerik sağlayıcılarıyla uyumlu, kullanıcı dostu bir yayın deneyimi.
-              Kurulum hızlı, kullanım basit.
-            </p>
+<div class="card reveal">
+<div class="tag">En İyi</div>
+<div class="money">₺1000</div>
+<div class="sub">12 Ay</div>
+<ul>
+<li><span class="check"></span>En avantajlı fiyat</li>
+<li><span class="check"></span>VIP destek</li>
+<li><span class="check"></span>Tek kullanıcı</li>
+</ul>
+</div>
 
-            <div class="hero-cta reveal" style="transition-delay:.14s">
-              <a class="btn primary" href="#paketler">Paketleri İncele</a>
-              <a class="btn" href="#ozellikler">Özellikler</a>
-            </div>
+</section>
+</div>
 
-            <div class="chips reveal" style="transition-delay:.18s">
-              <span class="chip"><i></i> Çoklu Cihaz</span>
-              <span class="chip"><i></i> Stabil Yayın</span>
-              <span class="chip"><i></i> Hızlı Kurulum</span>
-              <span class="chip"><i></i> Şeffaf Kullanım</span>
-            </div>
-          </div>
+<script>
+const els=document.querySelectorAll(".reveal");
+const io=new IntersectionObserver(e=>{
+e.forEach(x=>{
+if(x.isIntersecting){
+x.target.classList.add("show");
+}
+});
+});
+els.forEach(el=>io.observe(el));
+</script>
 
-          <aside class="hero-card reveal" style="transition-delay:.12s">
-            <p class="mini-title">Öne çıkanlar</p>
-            <div class="mini">
-              <div class="row">
-                <div class="pill" aria-hidden="true">
-                  <svg class="icon" viewBox="0 0 24 24" fill="none">
-                    <path d="M7 8h10M7 12h10M7 16h6" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" stroke="white" stroke-width="2"/>
-                  </svg>
-                </div>
-                <div>
-                  <b>Kategori düzeni</b>
-                  <p>Canlı TV, VOD gibi düzenli içerik yapısı.</p>
-                </div>
-              </div>
-              <div class="row">
-                <div class="pill" aria-hidden="true">
-                  <svg class="icon" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2l3 6 6 .9-4.5 4.4 1.1 6.2L12 16.9 6.4 19.5l1.1-6.2L3 8.9 9 8l3-6Z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
-                  </svg>
-                </div>
-                <div>
-                  <b>Kolay kullanım</b>
-                  <p>Arama, favoriler ve pratik arayüz.</p>
-                </div>
-              </div>
-              <div class="row">
-                <div class="pill" aria-hidden="true">
-                  <svg class="icon" viewBox="0 0 24 24" fill="none">
-                    <path d="M4 12a8 8 0 0 1 16 0" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M12 12l5-3" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M5 20h14" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                  </svg>
-                </div>
-                <div>
-                  <b>Stabil altyapı</b>
-                  <p>Akıcı izleme deneyimi için optimizasyon.</p>
-                </div>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </section>
-    </div>
-
-    <section id="ozellikler">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <h2 class="reveal">Özellikler</h2>
-            <p class="reveal" style="transition-delay:.05s">
-              alravi.tv tanıtım sayfası — yasal/izinli yayın prensibiyle hazırlanmıştır.
-            </p>
-          </div>
-        </div>
-
-        <div class="grid-3">
-          <div class="card reveal">
-            <div class="tag"><span class="spark"></span>Kalite</div>
-            <h3>HD / FHD (İçeriğe bağlı)</h3>
-            <p>Akış kalitesi, lisanslı kaynaklara göre sunulur.</p>
-          </div>
-
-          <div class="card reveal" style="transition-delay:.05s">
-            <div class="tag"><span class="spark"></span>Kolay</div>
-            <h3>Hızlı Kurulum</h3>
-            <p>Hesap → cihaz → izleme. Karmaşık adımlar yok.</p>
-          </div>
-
-          <div class="card reveal" style="transition-delay:.1s">
-            <div class="tag"><span class="spark"></span>Uyum</div>
-            <h3>Çoklu Cihaz</h3>
-            <p>Telefon, TV, tablet ve bilgisayarda uyumlu deneyim.</p>
-          </div>
-
-          <div class="card reveal">
-            <div class="tag"><span class="spark"></span>Deneyim</div>
-            <h3>Arama & Favoriler</h3>
-            <p>Hızlı arama, favoriler ve düzenli gezinme.</p>
-          </div>
-
-          <div class="card reveal" style="transition-delay:.05s">
-            <div class="tag"><span class="spark"></span>Güven</div>
-            <h3>Şeffaf Kullanım</h3>
-            <p>Kullanım koşulları ve gizlilik metinleriyle net yapı.</p>
-          </div>
-
-          <d
+</body>
+  </html>
