@@ -1,211 +1,730 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>alravi.tv</title>
-
-<script>document.documentElement.classList.add("js")</script>
-
-<style>
-:root{
---bg:#070a16;
---text:#eef2ff;
---muted:#b7c3ff;
---brand:#4da3ff;
---brand2:#7c5cff;
---border:rgba(255,255,255,.12);
---ok:#41d1a6;
-}
-
-body{
-margin:0;
-font-family:system-ui;
-background:
-radial-gradient(900px 500px at 10% 0%, rgba(124,92,255,.25), transparent),
-radial-gradient(800px 500px at 90% 10%, rgba(77,163,255,.2), transparent),
-var(--bg);
-color:var(--text);
-}
-
-.container{max-width:1100px;margin:auto;padding:20px}
-
-header{
-background:rgba(0,0,0,.4);
-backdrop-filter:blur(10px);
-position:sticky;
-top:0;
-}
-
-.nav{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 0;
-}
-
-.logo{
-width:40px;height:40px;border-radius:12px;
-background:linear-gradient(135deg,var(--brand),var(--brand2));
-}
-
-.brand{display:flex;gap:10px;align-items:center;font-weight:900}
-
-.menu a{
-color:var(--muted);
-margin-left:15px;
-font-weight:800;
-text-decoration:none;
-}
-
-.menu a:hover{color:white}
-
-h1{
-font-size:42px;
-margin:30px 0 10px;
-}
-
-p{color:var(--muted);font-weight:700}
-
-.pricing{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:15px;
-margin-top:30px;
-}
-
-.card{
-border:1px solid var(--border);
-padding:20px;
-border-radius:18px;
-background:rgba(255,255,255,.05);
-}
-
-.tag{
-display:inline-flex;
-gap:6px;
-padding:6px 10px;
-border-radius:999px;
-border:1px solid var(--border);
-font-size:12px;
-margin-bottom:10px;
-color:var(--muted);
-font-weight:800;
-}
-
-.money{
-font-size:30px;
-font-weight:900;
-margin:5px 0;
-}
-
-.sub{color:var(--muted);font-weight:800}
-
-ul{list-style:none;padding:0;margin:15px 0 0}
-li{margin:6px 0;color:var(--muted);font-weight:700}
-
-.check{
-display:inline-block;
-width:14px;height:14px;
-background:linear-gradient(135deg,var(--ok),var(--brand2));
-border-radius:4px;
-margin-right:6px;
-}
-
-/* reveal fix */
-.reveal{opacity:1;transform:none}
-.js .reveal{opacity:0;transform:translateY(20px);transition:.6s}
-.js .reveal.show{opacity:1;transform:none}
-
-@media(max-width:900px){
-.pricing{grid-template-columns:1fr 1fr}
-}
-@media(max-width:500px){
-.pricing{grid-template-columns:1fr}
-h1{font-size:32px}
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>alravi.game — ALRAVI RUN</title>
+  <meta name="theme-color" content="#0b1020" />
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#111a33cc;
+      --ink:#eaf0ff;
+      --muted:#a9b6ff;
+      --accent:#7c4dff;
+      --good:#38d9a9;
+      --bad:#ff4d6d;
+      --shadow: 0 12px 40px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: radial-gradient(1200px 700px at 20% 15%, #1a2b66 0%, var(--bg) 55%, #070a14 100%);
+      color:var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      overflow:hidden;
+      height:100vh;
+    }
+    .wrap{
+      position:fixed; inset:0;
+      display:grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 14px 14px calc(14px + env(safe-area-inset-bottom));
+      gap: 10px;
+    }
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .logo{
+      width:34px; height:34px; border-radius:12px;
+      background: conic-gradient(from 220deg, #7c4dff, #38d9a9, #ff4d6d, #7c4dff);
+      box-shadow: 0 10px 30px rgba(124,77,255,.25);
+    }
+    .title{line-height:1}
+    .title b{display:block; font-size:14px; letter-spacing:.5px}
+    .title span{font-size:12px; color:var(--muted)}
+    .hud{
+      display:flex; gap:10px; align-items:center;
+    }
+    .pill{
+      padding:10px 12px;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      min-width: 98px;
+      text-align:center;
+    }
+    .pill b{display:block; font-size:12px; color:var(--muted); font-weight:600}
+    .pill span{display:block; font-size:16px; font-weight:800}
+    .btn{
+      appearance:none; border:0;
+      padding:10px 12px;
+      border-radius: var(--radius);
+      color:var(--ink);
+      background: linear-gradient(135deg, rgba(124,77,255,.95), rgba(56,217,169,.85));
+      box-shadow: 0 12px 30px rgba(124,77,255,.25);
+      font-weight:800;
+      cursor:pointer;
+    }
+    .btn:active{transform: translateY(1px)}
+    .game{
+      position:relative;
+      border-radius: calc(var(--radius) + 10px);
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      backdrop-filter: blur(6px);
+    }
+    canvas{display:block; width:100%; height:100%;}
+    footer{
+      display:flex; justify-content:space-between; align-items:center;
+      gap:10px;
+    }
+    .help{
+      flex:1;
+      padding:10px 12px;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .controls{
+      display:flex; gap:8px;
+    }
+    .ctl{
+      width:56px; height:56px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: var(--ink);
+      font-size: 18px;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .ctl:active{transform: translateY(1px); background: rgba(255,255,255,.10)}
+    .overlay{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      padding: 16px;
+      background: radial-gradient(900px 600px at 50% 35%, rgba(124,77,255,.25), rgba(0,0,0,.55));
+      color: var(--ink);
+    }
+    .card{
+      width:min(520px, 100%);
+      background: rgba(9,12,24,.72);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      text-align:center;
+    }
+    .card h1{
+      margin: 6px 0 4px;
+      font-size: 26px;
+      letter-spacing:.4px;
+    }
+    .card p{
+      margin: 6px 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height:1.45;
+    }
+    .stats{
+      display:grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 10px;
+      margin: 12px 0 14px;
+    }
+    .stat{
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .stat b{display:block; color: var(--muted); font-size:12px}
+    .stat span{display:block; font-size:18px; font-weight:900}
+    .row{
+      display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+    }
+    .ghost{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow:none;
+    }
+    .small{
+      font-size:12px; color: var(--muted);
+      margin-top:10px;
+    }
+  </style>
 </head>
-
 <body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div class="title">
+        <b>alravi.game</b>
+        <span>ALRAVI RUN</span>
+      </div>
+    </div>
+    <div class="hud">
+      <div class="pill"><b>SKOR</b><span id="score">0</span></div>
+      <div class="pill"><b>COIN</b><span id="coins">0</span></div>
+      <button class="btn" id="restartTop" title="Yeniden Başlat">↻</button>
+    </div>
+  </header>
 
-<header>
-<div class="container nav">
-<div class="brand">
-<div class="logo"></div>
-<span>alravi.tv</span>
-</div>
-<div class="menu">
-<a href="#paketler">Paketler</a>
-</div>
-</div>
-</header>
+  <div class="game" id="gameBox">
+    <canvas id="c"></canvas>
 
-<div class="container">
+    <div class="overlay" id="overlay">
+      <div class="card">
+        <h1>ALRAVI RUN</h1>
+        <p>Engellerden kaç, coin topla, hızlandıkça zorlaşan pistte rekor kır!</p>
 
-<h1 class="reveal">IPTV Paketleri</h1>
-<p class="reveal">Size uygun planı seçin ve hemen izlemeye başlayın.</p>
+        <div class="stats">
+          <div class="stat"><b>En İyi</b><span id="bestScore">0</span></div>
+          <div class="stat"><b>Son Skor</b><span id="lastScore">0</span></div>
+          <div class="stat"><b>Toplam Coin</b><span id="totalCoins">0</span></div>
+        </div>
 
-<section id="paketler" class="pricing">
+        <div class="row">
+          <button class="btn" id="playBtn">▶ Başla</button>
+          <button class="btn ghost" id="howBtn">⌨ Kontroller</button>
+        </div>
 
-<div class="card reveal">
-<div class="tag">Başlangıç</div>
-<div class="money">₺100</div>
-<div class="sub">1 Ay</div>
-<ul>
-<li><span class="check"></span>Standart erişim</li>
-<li><span class="check"></span>Temel destek</li>
-<li><span class="check"></span>Tek kullanıcı</li>
-</ul>
-</div>
+        <div class="small" id="howText" style="display:none">
+          Klavye: ← → şerit değiştir • ↑ zıpla • R yeniden başlat<br/>
+          Mobil: aşağıdaki butonları kullan
+        </div>
+      </div>
+    </div>
+  </div>
 
-<div class="card reveal">
-<div class="tag">Avantajlı</div>
-<div class="money">₺250</div>
-<div class="sub">3 Ay</div>
-<ul>
-<li><span class="check"></span>Daha uygun fiyat</li>
-<li><span class="check"></span>Öncelikli destek</li>
-<li><span class="check"></span>Tek kullanıcı</li>
-</ul>
-</div>
-
-<div class="card reveal">
-<div class="tag">Popüler</div>
-<div class="money">₺550</div>
-<div class="sub">6 Ay</div>
-<ul>
-<li><span class="check"></span>Uzun kullanım</li>
-<li><span class="check"></span>Öncelikli destek</li>
-<li><span class="check"></span>Tek kullanıcı</li>
-</ul>
-</div>
-
-<div class="card reveal">
-<div class="tag">En İyi</div>
-<div class="money">₺1000</div>
-<div class="sub">12 Ay</div>
-<ul>
-<li><span class="check"></span>En avantajlı fiyat</li>
-<li><span class="check"></span>VIP destek</li>
-<li><span class="check"></span>Tek kullanıcı</li>
-</ul>
-</div>
-
-</section>
+  <footer>
+    <div class="help">
+      <b style="color:var(--ink)">İpucu:</b> Coinleri topla, engellere çarpmadan olabildiğince uzun git.
+      Hız zamanla artar.
+    </div>
+    <div class="controls">
+      <button class="ctl" id="leftBtn" aria-label="Sol">←</button>
+      <button class="ctl" id="jumpBtn" aria-label="Zıpla">↑</button>
+      <button class="ctl" id="rightBtn" aria-label="Sağ">→</button>
+    </div>
+  </footer>
 </div>
 
 <script>
-const els=document.querySelectorAll(".reveal");
-const io=new IntersectionObserver(e=>{
-e.forEach(x=>{
-if(x.isIntersecting){
-x.target.classList.add("show");
-}
-});
-});
-els.forEach(el=>io.observe(el));
-</script>
+(() => {
+  const canvas = document.getElementById('c');
+  const box = document.getElementById('gameBox');
+  const ctx = canvas.getContext('2d');
 
-</body>
-  </html>
+  const scoreEl = document.getElementById('score');
+  const coinsEl = document.getElementById('coins');
+
+  const overlay = document.getElementById('overlay');
+  const playBtn = document.getElementById('playBtn');
+  const howBtn = document.getElementById('howBtn');
+  const howText = document.getElementById('howText');
+
+  const bestScoreEl = document.getElementById('bestScore');
+  const lastScoreEl = document.getElementById('lastScore');
+  const totalCoinsEl = document.getElementById('totalCoins');
+
+  const restartTop = document.getElementById('restartTop');
+  const leftBtn = document.getElementById('leftBtn');
+  const rightBtn = document.getElementById('rightBtn');
+  const jumpBtn = document.getElementById('jumpBtn');
+
+  const store = {
+    get best(){ return +(localStorage.getItem('alr_best') || 0); },
+    set best(v){ localStorage.setItem('alr_best', String(v)); },
+    get totalCoins(){ return +(localStorage.getItem('alr_totalCoins') || 0); },
+    set totalCoins(v){ localStorage.setItem('alr_totalCoins', String(v)); },
+    get last(){ return +(localStorage.getItem('alr_last') || 0); },
+    set last(v){ localStorage.setItem('alr_last', String(v)); },
+  };
+
+  function fit(){
+    const r = box.getBoundingClientRect();
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = Math.floor(r.width * dpr);
+    canvas.height = Math.floor(r.height * dpr);
+    canvas.style.width = r.width + 'px';
+    canvas.style.height = r.height + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0); // draw in CSS pixels
+    W = r.width; H = r.height;
+  }
+
+  let W=0, H=0;
+  window.addEventListener('resize', fit, {passive:true});
+  fit();
+
+  // Game constants
+  const lanes = 3;
+  const laneWidth = () => Math.min(140, W * 0.28);
+  const roadWidth = () => laneWidth() * lanes;
+  const roadLeft = () => (W - roadWidth()) / 2;
+  const groundY = () => H * 0.82;
+
+  const rnd = (a,b)=> a + Math.random()*(b-a);
+
+  // Entities
+  const player = {
+    lane: 1,
+    x: 0,
+    y: 0,
+    vy: 0,
+    w: 34,
+    h: 44,
+    onGround: true,
+    invuln: 0
+  };
+
+  let obstacles = [];
+  let coins = [];
+  let particles = [];
+
+  // State
+  let running = false;
+  let tPrev = 0;
+  let speed = 260;      // pixels/sec
+  let accel = 7.5;      // speed increase per sec
+  let score = 0;
+  let coinCount = 0;
+
+  // Spawners
+  let obsTimer = 0;
+  let coinTimer = 0;
+
+  function reset(){
+    obstacles = [];
+    coins = [];
+    particles = [];
+    speed = 260;
+    score = 0;
+    coinCount = 0;
+    obsTimer = 0;
+    coinTimer = 0;
+    player.lane = 1;
+    player.y = 0;
+    player.vy = 0;
+    player.onGround = true;
+    player.invuln = 0;
+    updateHUD();
+  }
+
+  function start(){
+    reset();
+    running = true;
+    overlay.style.display = 'none';
+    tPrev = performance.now();
+    requestAnimationFrame(loop);
+  }
+
+  function gameOver(){
+    running = false;
+    store.last = Math.floor(score);
+    store.best = Math.max(store.best, store.last);
+    store.totalCoins = store.totalCoins + coinCount;
+
+    bestScoreEl.textContent = store.best;
+    lastScoreEl.textContent = store.last;
+    totalCoinsEl.textContent = store.totalCoins;
+
+    overlay.style.display = 'flex';
+  }
+
+  function updateHUD(){
+    scoreEl.textContent = Math.floor(score);
+    coinsEl.textContent = coinCount;
+  }
+
+  function laneX(lane){
+    const lw = laneWidth();
+    return roadLeft() + lw*(lane+0.5);
+  }
+
+  function spawnObstacle(){
+    const lane = Math.floor(rnd(0, lanes));
+    const kind = Math.random() < 0.25 ? 'tall' : 'box';
+    const w = kind==='tall' ? 34 : 38;
+    const h = kind==='tall' ? 70 : 42;
+    obstacles.push({
+      lane,
+      x: laneX(lane),
+      y: groundY() - h/2,
+      w, h,
+      kind
+    });
+  }
+
+  function spawnCoinLine(){
+    const lane = Math.floor(rnd(0, lanes));
+    const n = Math.random() < 0.4 ? 5 : 3;
+    const gap = 36;
+    for(let i=0;i<n;i++){
+      coins.push({
+        lane,
+        x: laneX(lane),
+        y: groundY() - 90 - i*8,
+        z: H + i*gap, // use z as along-track offset
+        r: 10
+      });
+    }
+  }
+
+  function burst(x,y,good=true){
+    for(let i=0;i<12;i++){
+      particles.push({
+        x,y,
+        vx: rnd(-140,140),
+        vy: rnd(-180,40),
+        life: rnd(0.35,0.7),
+        t: 0,
+        good
+      });
+    }
+  }
+
+  function hitTestRect(ax,ay,aw,ah, bx,by,bw,bh){
+    return Math.abs(ax-bx) * 2 < (aw+bw) && Math.abs(ay-by) * 2 < (ah+bh);
+  }
+
+  function drawRoundedRect(x,y,w,h,r){
+    const rr = Math.min(r, w/2, h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+rr, y);
+    ctx.arcTo(x+w, y, x+w, y+h, rr);
+    ctx.arcTo(x+w, y+h, x, y+h, rr);
+    ctx.arcTo(x, y+h, x, y, rr);
+    ctx.arcTo(x, y, x+w, y, rr);
+    ctx.closePath();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // Background stars
+    const starN = 70;
+    ctx.globalAlpha = 0.6;
+    for(let i=0;i<starN;i++){
+      const sx = (i*97 % 997) / 997 * W;
+      const sy = (i*53 % 733) / 733 * (H*0.65);
+      const tw = ((i*31)%10)/10;
+      ctx.fillStyle = "rgba(234,240,255,"+(0.12+tw*0.28)+")";
+      ctx.fillRect(sx, sy, 2, 2);
+    }
+    ctx.globalAlpha = 1;
+
+    // Road
+    const rl = roadLeft();
+    const rw = roadWidth();
+    const gy = groundY();
+
+    // subtle glow
+    ctx.fillStyle = "rgba(124,77,255,0.09)";
+    drawRoundedRect(rl-10, gy-160, rw+20, 220, 28);
+    ctx.fill();
+
+    // road body
+    ctx.fillStyle = "rgba(255,255,255,0.06)";
+    drawRoundedRect(rl, gy-150, rw, 210, 26);
+    ctx.fill();
+
+    // lane separators
+    ctx.save();
+    ctx.beginPath();
+    drawRoundedRect(rl, gy-150, rw, 210, 26);
+    ctx.clip();
+    const lw = laneWidth();
+    const dashLen = 26;
+    const dashGap = 20;
+    const scroll = (performance.now()/1000 * speed*0.75) % (dashLen+dashGap);
+    for(let lane=1; lane<lanes; lane++){
+      const x = rl + lw*lane;
+      for(let y=gy-145; y<gy+60; y+=dashLen+dashGap){
+        ctx.fillStyle = "rgba(234,240,255,0.14)";
+        ctx.fillRect(x-2, y + scroll, 4, dashLen);
+      }
+    }
+    ctx.restore();
+
+    // Shadows for entities
+    function shadowAt(x,y,sz){
+      ctx.beginPath();
+      ctx.ellipse(x, y, sz, sz*0.45, 0, 0, Math.PI*2);
+      ctx.fillStyle = "rgba(0,0,0,0.28)";
+      ctx.fill();
+    }
+
+    // Draw coins (sorted by z)
+    coins.sort((a,b)=>b.z-a.z);
+    for(const c of coins){
+      const p = (H - c.z) / H; // 0..1
+      const y = gy - 80 - p*40;
+      shadowAt(c.x, gy-6, 12);
+
+      ctx.beginPath();
+      ctx.arc(c.x, y, c.r, 0, Math.PI*2);
+      ctx.fillStyle = "rgba(56,217,169,0.75)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(234,240,255,0.35)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // inner shine
+      ctx.beginPath();
+      ctx.arc(c.x-3, y-3, c.r*0.35, 0, Math.PI*2);
+      ctx.fillStyle = "rgba(234,240,255,0.55)";
+      ctx.fill();
+    }
+
+    // Draw obstacles (sorted by y not needed much)
+    for(const o of obstacles){
+      shadowAt(o.x, gy-6, 18);
+
+      const x = o.x - o.w/2;
+      const y = o.y - o.h/2;
+      drawRoundedRect(x, y, o.w, o.h, 12);
+      ctx.fillStyle = o.kind==='tall' ? "rgba(255,77,109,0.78)" : "rgba(124,77,255,0.72)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(234,240,255,0.18)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // warning stripe
+      ctx.fillStyle = "rgba(234,240,255,0.18)";
+      ctx.fillRect(x+6, y+8, o.w-12, 6);
+    }
+
+    // Player
+    const px = laneX(player.lane);
+    const py = gy - 24 - player.y;
+    shadowAt(px, gy-6, 18);
+
+    const pr = 14;
+    ctx.save();
+    if(player.invuln>0){
+      ctx.globalAlpha = 0.55 + 0.45*Math.sin(performance.now()/80);
+    }
+    drawRoundedRect(px-player.w/2, py-player.h/2, player.w, player.h, pr);
+    ctx.fillStyle = "rgba(234,240,255,0.15)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(234,240,255,0.35)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // helmet/accent
+    ctx.beginPath();
+    ctx.arc(px, py-player.h*0.18, 9, 0, Math.PI*2);
+    ctx.fillStyle = "rgba(56,217,169,0.75)";
+    ctx.fill();
+
+    // face visor
+    ctx.fillStyle = "rgba(124,77,255,0.65)";
+    drawRoundedRect(px-10, py-4, 20, 10, 6);
+    ctx.fill();
+    ctx.restore();
+
+    // Particles
+    for(const p of particles){
+      const a = 1 - p.t/p.life;
+      ctx.globalAlpha = Math.max(0,a);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+      ctx.fillStyle = p.good ? "rgba(56,217,169,0.95)" : "rgba(255,77,109,0.95)";
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // Vignette
+    const g = ctx.createRadialGradient(W/2,H/2, Math.min(W,H)*0.2, W/2,H/2, Math.max(W,H)*0.75);
+    g.addColorStop(0, "rgba(0,0,0,0)");
+    g.addColorStop(1, "rgba(0,0,0,0.35)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,W,H);
+  }
+
+  function step(dt){
+    // Difficulty ramp
+    speed += accel * dt;
+    score += dt * (10 + speed*0.02);
+
+    // Jump physics
+    const g = 1300;
+    if(!player.onGround){
+      player.vy -= g*dt;
+      player.y += player.vy*dt;
+      if(player.y <= 0){
+        player.y = 0;
+        player.vy = 0;
+        player.onGround = true;
+      }
+    }
+
+    if(player.invuln>0){
+      player.invuln = Math.max(0, player.invuln - dt);
+    }
+
+    // Spawn logic
+    obsTimer -= dt;
+    coinTimer -= dt;
+
+    const obsEvery = Math.max(0.55, 1.15 - (speed-260)/700); // faster -> more frequent
+    const coinEvery = 1.6;
+
+    if(obsTimer <= 0){
+      spawnObstacle();
+      obsTimer = obsEvery * rnd(0.85,1.15);
+    }
+    if(coinTimer <= 0){
+      spawnCoinLine();
+      coinTimer = coinEvery * rnd(0.9,1.2);
+    }
+
+    // Move obstacles toward player
+    const dz = speed * dt;
+
+    for(const o of obstacles){
+      o.y += 0; // fixed
+      // use implicit along track by moving them "down" via z simulated by shifting y? We'll shift by storing a z in y-space:
+      o._z = (o._z ?? H + rnd(180,420)) - dz;
+    }
+    obstacles = obstacles.filter(o => o._z > -200);
+
+    // Convert obstacle _z to screen y offset (perspective-ish)
+    for(const o of obstacles){
+      const p = (H - o._z) / H;
+      o.y = groundY() - o.h/2 - p*18;
+      o.x = laneX(o.lane);
+    }
+
+    for(const c of coins){
+      c.z -= dz;
+    }
+    coins = coins.filter(c => c.z > -100);
+
+    // Particles
+    for(const p of particles){
+      p.t += dt;
+      p.x += p.vx*dt;
+      p.y += p.vy*dt;
+      p.vy += 520*dt;
+    }
+    particles = particles.filter(p => p.t < p.life);
+
+    // Collisions
+    const px = laneX(player.lane);
+    const py = groundY() - 24 - player.y;
+
+    // coins
+    for(let i=coins.length-1; i>=0; i--){
+      const c = coins[i];
+      const p = (H - c.z) / H;
+      const cy = groundY() - 80 - p*40;
+      const dx = px - c.x;
+      const dy = py - cy;
+      if(dx*dx + dy*dy < (18*18)){
+        coins.splice(i,1);
+        coinCount++;
+        burst(c.x, cy, true);
+      }
+    }
+
+    // obstacles
+    if(player.invuln<=0){
+      for(const o of obstacles){
+        const oy = o.y;
+        const hit = hitTestRect(px, py, player.w*0.75, player.h*0.8, o.x, oy, o.w, o.h);
+        if(hit){
+          burst(px, py, false);
+          gameOver();
+          break;
+        }
+      }
+    }
+
+    updateHUD();
+  }
+
+  function loop(t){
+    if(!running) return;
+    const dt = Math.min(0.033, (t - tPrev) / 1000);
+    tPrev = t;
+    step(dt);
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  function moveLane(dir){
+    if(!running) return;
+    player.lane = Math.max(0, Math.min(lanes-1, player.lane + dir));
+  }
+
+  function jump(){
+    if(!running) return;
+    if(player.onGround){
+      player.onGround = false;
+      player.vy = 560;
+    }
+  }
+
+  // Input
+  window.addEventListener('keydown', (e) => {
+    if(e.key === 'ArrowLeft') moveLane(-1);
+    else if(e.key === 'ArrowRight') moveLane(1);
+    else if(e.key === 'ArrowUp') jump();
+    else if(e.key.toLowerCase() === 'r'){ start(); }
+    else if(e.key === 'Enter' && !running){ start(); }
+  });
+
+  // Touch buttons
+  function bindHold(btn, fn){
+    let down=false;
+    const onDown = (e)=>{ e.preventDefault(); down=true; fn(); };
+    const onUp = ()=>{ down=false; };
+    btn.addEventListener('pointerdown', onDown);
+    btn.addEventListener('pointerup', onUp);
+    btn.addEventListener('pointercancel', onUp);
+    btn.addEventListener('pointerleave', onUp);
+  }
+  bindHold(leftBtn, ()=>moveLane(-1));
+  bindHold(rightBtn, ()=>moveLane(1));
+  bindHold(jumpBtn, ()=>jump());
+
+  // Overlay buttons
+  playBtn.addEventListener('click', start);
+  howBtn.addEventListener('click', ()=>{
+    howText.style.display = (howText.style.display === 'none') ? 'block' : 'none';
+  });
+
+  restartTop.addEventListener('click', start);
+
+  // Init overlay stats
+  bestScoreEl.textContent = store.best;
+  lastScoreEl.textContent = sto
