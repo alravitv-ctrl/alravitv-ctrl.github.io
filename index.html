@@ -24,7 +24,9 @@
       color:var(--ink);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       overflow:hidden;
-      height:100vh;
+
+      /* ✅ Android/iOS için daha stabil */
+      height: 100dvh;
     }
     .wrap{
       position:fixed; inset:0;
@@ -32,6 +34,10 @@
       grid-template-rows: auto 1fr auto;
       padding: 14px 14px calc(14px + env(safe-area-inset-bottom));
       gap: 10px;
+
+      /* ✅ canvas 0px olmasın */
+      height: 100dvh;
+      min-height: 520px;
     }
     header{
       display:flex; align-items:center; justify-content:space-between;
@@ -88,8 +94,16 @@
       box-shadow: var(--shadow);
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
       backdrop-filter: blur(6px);
+
+      /* ✅ Orta alanı kesin doldursun */
+      height: 100%;
+      min-height: 320px;
     }
-    canvas{display:block; width:100%; height:100%;}
+    canvas{
+      display:block;
+      width:100%;
+      height:100%;
+    }
     footer{
       display:flex; justify-content:space-between; align-items:center;
       gap:10px;
@@ -122,6 +136,7 @@
       cursor:pointer;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
     .ctl:active{transform: translateY(1px); background: rgba(255,255,255,.10)}
     .overlay{
@@ -239,6 +254,11 @@
 
 <script>
 (() => {
+  // ✅ Hata olursa direkt göster (çalışmıyor durumunu hemen yakalar)
+  window.onerror = (msg, src, line, col) => {
+    alert("Hata: " + msg + "\n" + line + ":" + col);
+  };
+
   const canvas = document.getElementById('c');
   const box = document.getElementById('gameBox');
   const ctx = canvas.getContext('2d');
@@ -269,19 +289,40 @@
     set last(v){ localStorage.setItem('alr_last', String(v)); },
   };
 
+  let W=0, H=0;
+
   function fit(){
     const r = box.getBoundingClientRect();
     const dpr = Math.min(2, window.devicePixelRatio || 1);
+
+    // ✅ 0px gelirse çizim yapma
+    if(r.width < 10 || r.height < 10) return;
+
     canvas.width = Math.floor(r.width * dpr);
     canvas.height = Math.floor(r.height * dpr);
     canvas.style.width = r.width + 'px';
     canvas.style.height = r.height + 'px';
-    ctx.setTransform(dpr,0,0,dpr,0,0); // draw in CSS pixels
+
+    // draw in CSS pixels
+    ctx.setTransform(dpr,0,0,dpr,0,0);
     W = r.width; H = r.height;
   }
 
-  let W=0, H=0;
-  window.addEventListener('resize', fit, {passive:true});
+  // ✅ resize güvenli
+  window.addEventListener('resize', () => {
+    fit();
+    draw(); // ekranda hemen güncellensin
+  }, {passive:true});
+
+  // ✅ box boyutu değişince de yakala
+  if('ResizeObserver' in window){
+    const ro = new ResizeObserver(() => {
+      fit();
+      draw();
+    });
+    ro.observe(box);
+  }
+
   fit();
 
   // Game constants
@@ -296,7 +337,6 @@
   // Entities
   const player = {
     lane: 1,
-    x: 0,
     y: 0,
     vy: 0,
     w: 34,
@@ -312,8 +352,8 @@
   // State
   let running = false;
   let tPrev = 0;
-  let speed = 260;      // pixels/sec
-  let accel = 7.5;      // speed increase per sec
+  let speed = 260;
+  let accel = 7.5;
   let score = 0;
   let coinCount = 0;
 
@@ -342,8 +382,13 @@
     reset();
     running = true;
     overlay.style.display = 'none';
-    tPrev = performance.now();
-    requestAnimationFrame(loop);
+
+    // ✅ Play’e basınca layout otursun, canvas kesin ölçü alsın
+    requestAnimationFrame(() => {
+      fit();
+      tPrev = performance.now();
+      requestAnimationFrame(loop);
+    });
   }
 
   function gameOver(){
@@ -379,7 +424,8 @@
       x: laneX(lane),
       y: groundY() - h/2,
       w, h,
-      kind
+      kind,
+      _z: H + rnd(220,480)
     });
   }
 
@@ -391,8 +437,7 @@
       coins.push({
         lane,
         x: laneX(lane),
-        y: groundY() - 90 - i*8,
-        z: H + i*gap, // use z as along-track offset
+        z: H + 220 + i*gap,
         r: 10
       });
     }
@@ -427,6 +472,9 @@
   }
 
   function draw(){
+    // ✅ ölçü yoksa çizme
+    if(W < 10 || H < 10) return;
+
     ctx.clearRect(0,0,W,H);
 
     // Background stars
@@ -446,12 +494,10 @@
     const rw = roadWidth();
     const gy = groundY();
 
-    // subtle glow
     ctx.fillStyle = "rgba(124,77,255,0.09)";
     drawRoundedRect(rl-10, gy-160, rw+20, 220, 28);
     ctx.fill();
 
-    // road body
     ctx.fillStyle = "rgba(255,255,255,0.06)";
     drawRoundedRect(rl, gy-150, rw, 210, 26);
     ctx.fill();
@@ -474,7 +520,6 @@
     }
     ctx.restore();
 
-    // Shadows for entities
     function shadowAt(x,y,sz){
       ctx.beginPath();
       ctx.ellipse(x, y, sz, sz*0.45, 0, 0, Math.PI*2);
@@ -485,7 +530,7 @@
     // Draw coins (sorted by z)
     coins.sort((a,b)=>b.z-a.z);
     for(const c of coins){
-      const p = (H - c.z) / H; // 0..1
+      const p = (H - c.z) / H;
       const y = gy - 80 - p*40;
       shadowAt(c.x, gy-6, 12);
 
@@ -497,14 +542,13 @@
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // inner shine
       ctx.beginPath();
       ctx.arc(c.x-3, y-3, c.r*0.35, 0, Math.PI*2);
       ctx.fillStyle = "rgba(234,240,255,0.55)";
       ctx.fill();
     }
 
-    // Draw obstacles (sorted by y not needed much)
+    // Obstacles
     for(const o of obstacles){
       shadowAt(o.x, gy-6, 18);
 
@@ -517,7 +561,6 @@
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // warning stripe
       ctx.fillStyle = "rgba(234,240,255,0.18)";
       ctx.fillRect(x+6, y+8, o.w-12, 6);
     }
@@ -527,25 +570,22 @@
     const py = gy - 24 - player.y;
     shadowAt(px, gy-6, 18);
 
-    const pr = 14;
     ctx.save();
     if(player.invuln>0){
       ctx.globalAlpha = 0.55 + 0.45*Math.sin(performance.now()/80);
     }
-    drawRoundedRect(px-player.w/2, py-player.h/2, player.w, player.h, pr);
+    drawRoundedRect(px-player.w/2, py-player.h/2, player.w, player.h, 14);
     ctx.fillStyle = "rgba(234,240,255,0.15)";
     ctx.fill();
     ctx.strokeStyle = "rgba(234,240,255,0.35)";
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // helmet/accent
     ctx.beginPath();
     ctx.arc(px, py-player.h*0.18, 9, 0, Math.PI*2);
     ctx.fillStyle = "rgba(56,217,169,0.75)";
     ctx.fill();
 
-    // face visor
     ctx.fillStyle = "rgba(124,77,255,0.65)";
     drawRoundedRect(px-10, py-4, 20, 10, 6);
     ctx.fill();
@@ -562,7 +602,6 @@
     }
     ctx.globalAlpha = 1;
 
-    // Vignette
     const g = ctx.createRadialGradient(W/2,H/2, Math.min(W,H)*0.2, W/2,H/2, Math.max(W,H)*0.75);
     g.addColorStop(0, "rgba(0,0,0,0)");
     g.addColorStop(1, "rgba(0,0,0,0.35)");
@@ -571,7 +610,6 @@
   }
 
   function step(dt){
-    // Difficulty ramp
     speed += accel * dt;
     score += dt * (10 + speed*0.02);
 
@@ -595,7 +633,7 @@
     obsTimer -= dt;
     coinTimer -= dt;
 
-    const obsEvery = Math.max(0.55, 1.15 - (speed-260)/700); // faster -> more frequent
+    const obsEvery = Math.max(0.55, 1.15 - (speed-260)/700);
     const coinEvery = 1.6;
 
     if(obsTimer <= 0){
@@ -607,29 +645,22 @@
       coinTimer = coinEvery * rnd(0.9,1.2);
     }
 
-    // Move obstacles toward player
     const dz = speed * dt;
 
     for(const o of obstacles){
-      o.y += 0; // fixed
-      // use implicit along track by moving them "down" via z simulated by shifting y? We'll shift by storing a z in y-space:
-      o._z = (o._z ?? H + rnd(180,420)) - dz;
-    }
-    obstacles = obstacles.filter(o => o._z > -200);
-
-    // Convert obstacle _z to screen y offset (perspective-ish)
-    for(const o of obstacles){
+      o._z -= dz;
       const p = (H - o._z) / H;
       o.y = groundY() - o.h/2 - p*18;
       o.x = laneX(o.lane);
     }
+    obstacles = obstacles.filter(o => o._z > -220);
 
     for(const c of coins){
       c.z -= dz;
+      c.x = laneX(c.lane);
     }
-    coins = coins.filter(c => c.z > -100);
+    coins = coins.filter(c => c.z > -120);
 
-    // Particles
     for(const p of particles){
       p.t += dt;
       p.x += p.vx*dt;
@@ -638,15 +669,14 @@
     }
     particles = particles.filter(p => p.t < p.life);
 
-    // Collisions
     const px = laneX(player.lane);
     const py = groundY() - 24 - player.y;
 
     // coins
     for(let i=coins.length-1; i>=0; i--){
       const c = coins[i];
-      const p = (H - c.z) / H;
-      const cy = groundY() - 80 - p*40;
+      const pp = (H - c.z) / H;
+      const cy = groundY() - 80 - pp*40;
       const dx = px - c.x;
       const dy = py - cy;
       if(dx*dx + dy*dy < (18*18)){
@@ -659,8 +689,7 @@
     // obstacles
     if(player.invuln<=0){
       for(const o of obstacles){
-        const oy = o.y;
-        const hit = hitTestRect(px, py, player.w*0.75, player.h*0.8, o.x, oy, o.w, o.h);
+        const hit = hitTestRect(px, py, player.w*0.75, player.h*0.8, o.x, o.y, o.w, o.h);
         if(hit){
           burst(px, py, false);
           gameOver();
@@ -704,27 +733,20 @@
   });
 
   // Touch buttons
-  function bindHold(btn, fn){
-    let down=false;
-    const onDown = (e)=>{ e.preventDefault(); down=true; fn(); };
-    const onUp = ()=>{ down=false; };
-    btn.addEventListener('pointerdown', onDown);
-    btn.addEventListener('pointerup', onUp);
-    btn.addEventListener('pointercancel', onUp);
-    btn.addEventListener('pointerleave', onUp);
+  function bind(btn, fn){
+    btn.addEventListener('pointerdown', (e)=>{ e.preventDefault(); fn(); });
   }
-  bindHold(leftBtn, ()=>moveLane(-1));
-  bindHold(rightBtn, ()=>moveLane(1));
-  bindHold(jumpBtn, ()=>jump());
+  bind(leftBtn, ()=>moveLane(-1));
+  bind(rightBtn, ()=>moveLane(1));
+  bind(jumpBtn, ()=>jump());
 
   // Overlay buttons
   playBtn.addEventListener('click', start);
   howBtn.addEventListener('click', ()=>{
     howText.style.display = (howText.style.display === 'none') ? 'block' : 'none';
   });
-
   restartTop.addEventListener('click', start);
 
   // Init overlay stats
   bestScoreEl.textContent = store.best;
-  lastScoreEl.textContent = sto
+  lastScoreEl.textCont
