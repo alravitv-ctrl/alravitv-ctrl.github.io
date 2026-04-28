@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEXUS — Oyun Evreni</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --neon: #00f5d4;
+      --red: #ff2d55;
+      --yellow: #ffd60a;
+      --dark: #050710;
+      --darker: #020308;
+      --card: #0b0e1f;
+      --border: rgba(0,245,212,0.15);
+      --glow: 0 0 20px rgba(0,245,212,0.4);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: #e0e6ff;
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed; width: 12px; height: 12px;
+      background: var(--neon); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.2s, height 0.2s;
+      mix-blend-mode: screen;
+    }
+    .cursor-ring {
+      position: fixed; width: 36px; height: 36px;
+      border: 1px solid var(--neon); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease, opacity 0.3s;
+      opacity: 0.5;
+    }
+
+    /* Scanline overlay */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
+      pointer-events: none; z-index: 9997;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(5,7,16,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.6rem; font-weight: 900;
+      color: var(--neon);
+      text-shadow: var(--glow);
+      letter-spacing: 4px;
+    }
+    .logo span { color: var(--red); }
+    nav ul { display: flex; gap: 2.5rem; list-style: none; }
+    nav a {
+      font-size: 0.85rem; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: #8899bb;
+      text-decoration: none;
+      transition: color 0.2s;
+      position: relative;
+    }
+    nav a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 1px; background: var(--neon);
+      transform: scaleX(0); transition: transform 0.25s;
+    }
+    nav a:hover { color: var(--neon); }
+    nav a:hover::after { transform: scaleX(1); }
+    .nav-btn {
+      background: var(--neon); color: var(--dark);
+      border: none; padding: 0.5rem 1.4rem;
+      font-family: 'Orbitron', monospace; font-size: 0.7rem;
+      font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      cursor: none; clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .nav-btn:hover { background: #fff; box-shadow: var(--glow); }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      position: relative; overflow: hidden;
+      padding-top: 80px;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,245,212,0.07) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 40% at 80% 80%, rgba(255,45,85,0.06) 0%, transparent 60%),
+                  var(--darker);
+    }
+    .grid-lines {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,245,212,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,212,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridPulse 4s ease-in-out infinite;
+    }
+    @keyframes gridPulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--neon); border: 1px solid var(--neon);
+      padding: 0.3rem 1rem;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s 0.2s both;
+    }
+    .hero h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(3rem, 9vw, 8rem);
+      font-weight: 900; line-height: 0.9;
+      letter-spacing: -2px;
+      animation: fadeUp 0.8s 0.4s both;
+    }
+    .hero h1 .line1 { color: #fff; display: block; }
+    .hero h1 .line2 {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--neon);
+      display: block;
+    }
+    .hero h1 .line3 { color: var(--red); display: block; }
+    .hero-sub {
+      margin-top: 1.5rem;
+      font-size: 1.1rem; font-weight: 300;
+      color: #6677aa; max-width: 500px; margin-inline: auto;
+      animation: fadeUp 0.8s 0.6s both;
+      letter-spacing: 1px;
+    }
+    .hero-cta {
+      margin-top: 2.5rem;
+      display: flex; gap: 1rem; justify-content: center;
+      animation: fadeUp 0.8s 0.8s both;
+    }
+    .btn-primary {
+      background: var(--neon); color: var(--dark);
+      font-family: 'Orbitron', monospace; font-size: 0.75rem;
+      font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      padding: 0.9rem 2.5rem; border: none; cursor: none;
+      clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 0 30px rgba(0,245,212,0.5); }
+    .btn-secondary {
+      background: transparent; color: var(--neon);
+      font-family: 'Orbitron', monospace; font-size: 0.75rem;
+      font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      padding: 0.9rem 2.5rem; border: 1px solid var(--neon); cursor: none;
+      clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: rgba(0,245,212,0.1); transform: translateY(-2px); }
+
+    .hero-stats {
+      margin-top: 4rem;
+      display: flex; gap: 4rem; justify-content: center;
+      animation: fadeUp 0.8s 1s both;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem; font-weight: 900; color: var(--neon);
+      text-shadow: var(--glow);
+    }
+    .stat-label {
+      font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
+      color: #4455aa; margin-top: 0.2rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* FEATURED */
+    #oyunlar {
+      padding: 6rem 3rem;
+      max-width: 1400px; margin: 0 auto;
+    }
+    .section-header {
+      display: flex; align-items: baseline; gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .section-label {
+      font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--neon); font-weight: 600;
+    }
+    .section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem; font-weight: 900; color: #fff;
+    }
+    .section-line { flex: 1; height: 1px; background: var(--border); }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr;
+      grid-template-rows: 340px 240px;
+      gap: 1.2rem;
+    }
+    .game-card {
+      position: relative; overflow: hidden; cursor: none;
+      border: 1px solid var(--border);
+      background: var(--card);
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .game-card:hover { border-color: var(--neon); transform: translateY(-3px); }
+    .game-card.large { grid-row: 1 / 3; }
+    .game-card.wide { grid-column: 2 / 4; }
+    .game-bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transition: transform 0.5s;
+    }
+    .game-card:hover .game-bg { transform: scale(1.05); }
+    .game-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(5,7,16,0.95) 30%, transparent 70%);
+    }
+    .game-badge {
+      position: absolute; top: 1rem; left: 1rem;
+      font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;
+      padding: 0.3rem 0.8rem;
+      background: var(--red); color: #fff;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    }
+    .game-badge.new { background: var(--neon); color: var(--dark); }
+    .game-badge.hot { background: var(--yellow); color: var(--dark); }
+    .game-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1.5rem;
+    }
+    .game-genre {
+      font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--neon); margin-bottom: 0.4rem;
+    }
+    .game-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.4rem; font-weight: 700; color: #fff;
+      line-height: 1.1; margin-bottom: 0.6rem;
+    }
+    .game-card.large .game-title { font-size: 2rem; }
+    .game-meta {
+      display: flex; align-items: center; gap: 1rem;
+      font-size: 0.75rem; color: #6677aa;
+    }
+    .game-rating { color: var(--yellow); font-weight: 600; }
+    .game-play-btn {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: var(--neon); color: var(--dark);
+      font-family: 'Orbitron', monospace; font-size: 0.7rem;
+      font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      padding: 0.7rem 2rem; border: none; cursor: none;
+      clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+      transition: transform 0.3s, opacity 0.3s;
+      opacity: 0;
+      z-index: 2;
+    }
+    .game-card:hover .game-play-btn { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+
+    /* CATEGORIES */
+    #kategoriler {
+      background: var(--darker);
+      padding: 5rem 3rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .categories-inner { max-width: 1400px; margin: 0 auto; }
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1rem; margin-top: 2.5rem;
+    }
+    .cat-card {
+      border: 1px solid var(--border);
+      padding: 2rem 1rem; text-align: center;
+      cursor: none; transition: all 0.3s;
+      position: relative; overflow: hidden;
+      background: rgba(11,14,31,0.5);
+    }
+    .cat-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--neon); opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .cat-card:hover { border-color: var(--neon); transform: translateY(-5px); }
+    .cat-card:hover::before { opacity: 0.05; }
+    .cat-icon { font-size: 2.5rem; margin-bottom: 0.8rem; display: block; }
+    .cat-name {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: #8899bb;
+      transition: color 0.3s;
+    }
+    .cat-card:hover .cat-name { color: var(--neon); }
+    .cat-count { font-size: 0.65rem; color: #3344aa; margin-top: 0.3rem; }
+
+    /* LEADERBOARD */
+    #turnuva {
+      padding: 6rem 3rem;
+      max-width: 1400px; margin: 0 auto;
+    }
+    .tournament-grid {
+      display: grid; grid-template-columns: 1fr 1.5fr;
+      gap: 2rem; margin-top: 2.5rem;
+    }
+    .leaderboard {
+      border: 1px solid var(--border); background: var(--card);
+    }
+    .lb-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .lb-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--neon);
+    }
+    .lb-row {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 0.9rem 1.5rem;
+      border-bottom: 1px solid rgba(0,245,212,0.05);
+      transition: background 0.2s;
+    }
+    .lb-row:hover { background: rgba(0,245,212,0.03); }
+    .lb-rank {
+      font-family: 'Orbitron', monospace; font-size: 0.9rem;
+      font-weight: 900; width: 28px; text-align: center;
+    }
+    .lb-rank.gold { color: var(--yellow); }
+    .lb-rank.silver { color: #aab0cc; }
+    .lb-rank.bronze { color: #cd7f32; }
+    .lb-rank.other { color: #3344aa; }
+    .lb-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--neon), var(--red));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; color: var(--dark);
+    }
+    .lb-name { flex: 1; font-size: 0.9rem; font-weight: 600; }
+    .lb-score {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem; color: var(--neon);
+    }
+
+    .promo-card {
+      border: 1px solid var(--border); background: var(--card);
+      padding: 2.5rem; position: relative; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .promo-card::before {
+      content: '';
+      position: absolute; top: -50%; right: -30%;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,245,212,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .promo-label {
+      font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--red); font-weight: 600; margin-bottom: 0.8rem;
+    }
+    .promo-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem; font-weight: 900; color: #fff;
+      line-height: 1.1; margin-bottom: 1rem;
+    }
+    .promo-title span { color: var(--neon); }
+    .promo-desc { color: #6677aa; font-size: 0.9rem; line-height: 1.6; margin-bottom: 2rem; }
+    .promo-prize {
+      font-family: 'Orbitron', monospace;
+      font-size: 3rem; font-weight: 900;
+      color: var(--yellow); text-shadow: 0 0 20px rgba(255,214,10,0.4);
+    }
+    .promo-prize span { font-size: 1rem; color: #6677aa; }
+    .countdown {
+      display: flex; gap: 1.5rem; margin: 1.5rem 0;
+    }
+    .cd-block { text-align: center; }
+    .cd-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem; font-weight: 900; color: var(--neon);
+      display: block; line-height: 1;
+    }
+    .cd-label { font-size: 0.6rem; letter-spacing: 2px; color: #3344aa; text-transform: uppercase; }
+
+    /* NEWS */
+    #haberler {
+      background: var(--darker);
+      padding: 5rem 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .news-inner { max-width: 1400px; margin: 0 auto; }
+    .news-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem; margin-top: 2.5rem;
+    }
+    .news-card {
+      border: 1px solid var(--border); background: var(--card);
+      overflow: hidden; cursor: none; transition: border-color 0.3s;
+    }
+    .news-card:hover { border-color: rgba(0,245,212,0.4); }
+    .news-img {
+      height: 180px;
+      background: linear-gradient(135deg, #0b1030, #0d1a40);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem;
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .news-img::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(0,245,212,0.05) 100%);
+    }
+    .news-body { padding: 1.5rem; }
+    .news-tag {
+      font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--neon); font-weight: 600; margin-bottom: 0.6rem;
+    }
+    .news-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.9rem; font-weight: 700; color: #dde6ff;
+      line-height: 1.4; margin-bottom: 0.8rem;
+    }
+    .news-excerpt { font-size: 0.82rem; color: #4455aa; line-height: 1.6; }
+    .news-date { font-size: 0.7rem; color: #2233aa; margin-top: 1rem; }
+
+    /* FOOTER */
+    footer {
+      background: var(--darker);
+      border-top: 1px solid var(--border);
+      padding: 3rem;
+    }
+    .footer-inner {
+      max-width: 1400px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-logo {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.4rem; font-weight: 900;
+      color: var(--neon); letter-spacing: 4px;
+    }
+    .footer-logo span { color: var(--red); }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a {
+      font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase;
+      color: #3344aa; text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--neon); }
+    .footer-copy { font-size: 0.7rem; color: #2233aa; }
+
+    /* LIVE TICKER */
+    .ticker {
+      background: rgba(0,245,212,0.08);
+      border-top: 1px solid rgba(0,245,212,0.2);
+      border-bottom: 1px solid rgba(0,245,212,0.2);
+      overflow: hidden; padding: 0.5rem 0;
+    }
+    .ticker-inner {
+      display: flex; gap: 4rem;
+      animation: ticker 20s linear infinite;
+      white-space: nowrap;
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--neon); font-weight: 600;
+    }
+    .ticker-sep { color: var(--red); }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">NEX<span>U</span>S</div>
+  <ul>
+    <li><a href="#oyunlar">Oyunlar</a></li>
+    <li><a href="#kategoriler">Kategoriler</a></li>
+    <li><a href="#turnuva">Turnuva</a></li>
+    <li><a href="#haberler">Haberler</a></li>
+  </ul>
+  <button class="nav-btn">Giriş Yap</button>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker" style="margin-top: 72px;">
+  <div class="ticker-inner" id="ticker">
+    <span class="ticker-item">🏆 CyberStrike Turnuvası — 14 Mayıs</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🎮 Shadow Realm Yeni Sezon Başladı</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">⚡ Haftalık Ödül Potası: ₺500.000</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔥 Apex Hunter — Beta Erişim Açıldı</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🏆 CyberStrike Turnuvası — 14 Mayıs</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🎮 Shadow Realm Yeni Sezon Başladı</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">⚡ Haftalık Ödül Potası: ₺500.000</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔥 Apex Hunter — Beta Erişim Açıldı</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="grid-lines"></div>
+  <div class="hero" style="position:relative; z-index:2;">
+    <div class="hero-tag">// Türkiye'nin En Büyük Oyun Platformu //</div>
+    <h1>
+      <span class="line1">OYUN</span>
+      <span class="line2">DÜNYASI</span>
+      <span class="line3">SANA AÇIK</span>
+    </h1>
+    <p class="hero-sub">
+      Binlerce oyun, milyonlarca oyuncu, sınırsız eğlence.<br/>Rekabet et, kazan, efsane ol.
+    </p>
+    <div class="hero-cta">
+      <button class="btn-primary">Ücretsiz Başla</button>
+      <button class="btn-secondary">Oyunları Keşfet</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">2.4M+</div>
+        <div class="stat-label">Aktif Oyuncu</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5.800+</div>
+        <div class="stat-label">Oyun Başlığı</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">₺12M+</div>
+        <di
